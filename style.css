@@ -58,13 +58,13 @@ h3 {
   width: 95%;
   height: 10px;
    position: relative;
-  background-color: #eee;
+  background-color: #d4d;
 }
 
-#abscisse {
+#abscisse, #abscisse2,#abscisse3{
   margin-top: 20px;
   width: 95%;
-  height: 10px;
+  height: 30px;
   position: relative;
   background-color: #ddd;
 }
@@ -79,10 +79,29 @@ h3 {
 .elements {
   position: absolute;
    width: 2px;
-  height: 10px;
+  height: 30px;
   background-color: #fec72c;
   font-size: 8px;
   text-align: center;
 }
+
+.elements2 {
+  position: absolute;
+   width: 2px;
+  height: 30px;
+  background-color: #bada55;
+  font-size: 8px;
+  text-align: center;
+}
+
+.elements3 {
+  position: absolute;
+   width: 2px;
+  height: 30px;
+  background-color: #addec7;
+  font-size: 8px;
+  text-align: center;
+}
+
 
 

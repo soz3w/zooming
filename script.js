@@ -1,7 +1,5 @@
 $(document).ready(function(){
 
-    elements=[{id:'elem1',value:1},{id:'elem2',value:3},
-        {id:'elem3',value:5},{id:'elem4',value:9},{id:'elem5',value:11},{id:'elem6',value:24}];
 
     hours= [{id:'hh_01',value:1},{id:'hh_02',value:2},{id:'hh_03',value:3},
             {id:'hh_04',value:4},{id:'hh_05',value:5},{id:'hh_06',value:6},
@@ -12,15 +10,28 @@ $(document).ready(function(){
             {id:'hh_19',value:19},{id:'hh_20',value:20},{id:'hh_21',value:21},
             {id:'hh_22',value:22},{id:'hh_23',value:23},{id:'hh_24',value:24}];
 
-    elementsSelectionnes=[];
-    heuresSelectionnes=[];
+    elements=[{id:'elem1',value:2.2},{id:'elem2',value:3},
+        {id:'elem3',value:4.3},{id:'elem4',value:9},{id:'elem5',value:11},{id:'elem6',value:15}];
 
-   init();
+    elements2=[{id:'elem21',value:1.2},{id:'elem22',value:1.7},
+        {id:'elem23',value:3.3},{id:'elem24',value:19},{id:'elem25',value:21},{id:'elem26',value:23}];
+
+    elements3=[{id:'elem31',value:5.2},{id:'elem32',value:7.7},
+        {id:'elem33',value:13.3},{id:'elem34',value:16},{id:'elem35',value:19.5},{id:'elem36',value:21.5}];
+
+    
+    heuresSelectionnes=[];
+    elementsSelectionnes=[];
+    elements2Selectionnes=[];
+    elements3Selectionnes=[];
+    
+
+   initialize();
 
     
 
   
-  $("#abscisse").mousedown(function (e) {
+  $("#handledZone").mousedown(function (e) {
        
         //console.log(e.pageX);
         $("#big-spectre").remove();
@@ -68,132 +79,6 @@ function activeSelection(e) {
 }
 
 
-function selectionneElements(e) {
-
-    elementsSelectionnes=[];
-    heuresSelectionnes=[];
-
-    
-    $(document).unbind("mousemove", activeSelection);
-    $(document).unbind("mouseup", selectionneElements);
-    var mxX = 0;
-    var mnX = 5000;
-    var mxY = 0;
-    var mnY = 5000;
-
-
-    $(".elements").each(function () {
-        var aElemSpectre = $(".spectre-select");
-        var bElem = $(this);
-        var result = intersectionObject(aElemSpectre, bElem);
-
-        //console.log(bElem);
-
-        if (result == true) {
-
-                saveElementSelected(bElem);
-
-         
-                var aElemSpectrePos = bElem.offset();
-                var bElemPos = bElem.offset();
-                var aW = bElem.width();
-                var aH = bElem.height();
-                var bW = bElem.width();
-                var bH = bElem.height();
-
-                var coords = checkMinMaxPos(aElemSpectrePos, bElemPos, aW, aH, bW, bH, mxX, mnX, mxY, mnY);
-                mxX = coords.mxX;
-                mnX = coords.mnX;
-                mxY = coords.mxY;
-                mnY = coords.mnY;
-                var parent = bElem.parent();
-
-                //console.log(aElemSpectre, bElem,mxX, mnX, mxY,mnY);
-                if (bElem.css("left") === "auto" && bElem.css("top") === "auto") {
-                    bElem.css({
-                        'left': parent.css('left'),
-                        'top': parent.css('top')
-                    });
-                }
-          $("body").append("<div id='big-spectre' class='big-spectre' x='" + Number(mnX - 20) + "' y='" + Number(mnY - 10) + "'></div>");
-
-            $("#big-spectre").css({
-                'width': mxX + 40 - mnX,
-                'height': mxY + 20 - mnY,
-                'top': mnY - 10,
-                'left': mnX - 20
-            });
-          
-          
-        }
-    });
-
-    ///////////////////////////////////////////
-
-
-     $(".hour").each(function () {
-        var aElemSpectre = $(".spectre-select");
-        var bElem = $(this);
-        var result = intersectionObject(aElemSpectre, bElem);
-
-        //console.log(bElem);
-
-        if (result == true) {
-
-                saveHoursSelected(bElem);
-
-         
-                var aElemSpectrePos = bElem.offset();
-                var bElemPos = bElem.offset();
-                var aW = bElem.width();
-                var aH = bElem.height();
-                var bW = bElem.width();
-                var bH = bElem.height();
-
-                var coords = checkMinMaxPos(aElemSpectrePos, bElemPos, aW, aH, bW, bH, mxX, mnX, mxY, mnY);
-                mxX = coords.mxX;
-                mnX = coords.mnX;
-                mxY = coords.mxY;
-                mnY = coords.mnY;
-                var parent = bElem.parent();
-
-                //console.log(aElemSpectre, bElem,mxX, mnX, mxY,mnY);
-                if (bElem.css("left") === "auto" && bElem.css("top") === "auto") {
-                    bElem.css({
-                        'left': parent.css('left'),
-                        'top': parent.css('top')
-                    });
-                }
-          $("body").append("<div id='big-spectre' class='big-spectre' x='" + Number(mnX - 20) + "' y='" + Number(mnY - 10) + "'></div>");
-
-            $("#big-spectre").css({
-                'width': mxX + 40 - mnX,
-                'height': mxY + 20 - mnY,
-                'top': mnY - 10,
-                'left': mnX - 20
-            });
-          
-          
-        }
-    });
-
-
-    ///////////////////////////////////////////
-    
-    $(".spectre-select").removeClass("spectre-active");
-    $(".spectre-select").width(0).height(0);
-
-    ////////////////////////////////////////////////
-
-
-
-
-    ////////////////////////////////////////////////
-
-    zoomOnElementsSelected();
-   
-
-}
 
   
   
@@ -263,6 +148,102 @@ function checkMinMaxPos(a, b, aW, aH, bW, bH, mxX, mnX, mxY, mnY) {
     };
 }
 
+
+function catchElements(classElem,saveElementSelectedMethod,completList,selectedList){
+
+    $("."+classElem).each(function () {
+        var aElemSpectre = $(".spectre-select");
+        var bElem = $(this);
+        var result = intersectionObject(aElemSpectre, bElem);
+
+        //console.log(bElem);
+
+        if (result == true) {
+
+                //saveElementSelected(bElem);
+                saveElement(bElem,completList,selectedList);
+         
+                var aElemSpectrePos = bElem.offset();
+                var bElemPos = bElem.offset();
+                var aW = bElem.width();
+                var aH = bElem.height();
+                var bW = bElem.width();
+                var bH = bElem.height();
+
+                var coords = checkMinMaxPos(aElemSpectrePos, bElemPos, aW, aH, bW, bH, mxX, mnX, mxY, mnY);
+                mxX = coords.mxX;
+                mnX = coords.mnX;
+                mxY = coords.mxY;
+                mnY = coords.mnY;
+                var parent = bElem.parent();
+
+                //console.log(aElemSpectre, bElem,mxX, mnX, mxY,mnY);
+                if (bElem.css("left") === "auto" && bElem.css("top") === "auto") {
+                    bElem.css({
+                        'left': parent.css('left'),
+                        'top': parent.css('top')
+                    });
+                }
+          $("body").append("<div id='big-spectre' class='big-spectre' x='" + Number(mnX - 20) + "' y='" + Number(mnY - 10) + "'></div>");
+
+            $("#big-spectre").css({
+                'width': mxX + 40 - mnX,
+                'height': mxY + 20 - mnY,
+                'top': mnY - 10,
+                'left': mnX - 20
+            });
+          
+          
+        }
+    });
+
+
+}
+
+
+function selectionneElements(e) {
+
+    elementsSelectionnes=[];
+    elements2Selectionnes=[];
+    elements3Selectionnes=[];
+    heuresSelectionnes=[];
+
+    
+    $(document).unbind("mousemove", activeSelection);
+    $(document).unbind("mouseup", selectionneElements);
+    mxX = 0;
+    mnX = 5000;
+    mxY = 0;
+    mnY = 5000;
+    
+    catchElements("hour",saveElement,hours,heuresSelectionnes)
+    catchElements("elements",saveElement,elements,elementsSelectionnes)
+    catchElements("elements2",saveElement,elements2,elements2Selectionnes)
+    catchElements("elements3",saveElement,elements3,elements3Selectionnes)
+
+    ///////////////////////////////////////////
+    
+    $(".spectre-select").removeClass("spectre-active");
+    $(".spectre-select").width(0).height(0);
+    
+    zoomOnElementsSelected();
+   
+
+}
+
+function saveElement(elt,completList,selectedList){
+
+        completList.forEach(function(elem,index) {
+            if (elem.id==elt[0].id)
+            {
+                selectedList.push(elem);
+            }
+        });
+
+    console.log(selectedList);
+}
+
+
 function saveHoursSelected(elt){
 
         hours.forEach(function(elem,index) {
@@ -272,7 +253,7 @@ function saveHoursSelected(elt){
             }
         });
 
-    console.log(heuresSelectionnes);
+   // console.log(heuresSelectionnes);
 }
 
 function saveElementSelected(elt){
@@ -284,7 +265,7 @@ function saveElementSelected(elt){
             }
         });
 
-    console.log(elementsSelectionnes);
+    //console.log(elementsSelectionnes);
 }
 function zoomOnElementsSelected()
 {
@@ -292,6 +273,8 @@ function zoomOnElementsSelected()
     var maxH = 24
 
      $(".elements").remove();
+     $(".elements2").remove();
+     $(".elements3").remove();
      $(".hour").remove();
 
      if (heuresSelectionnes.length>0)
@@ -299,8 +282,10 @@ function zoomOnElementsSelected()
 
      representeElements("abscisseHours",heuresSelectionnes,'hour',maxH);
      representeElements("abscisse",elementsSelectionnes,'elements',maxH);
+     representeElements("abscisse2",elements2Selectionnes,'elements2',maxH);
+     representeElements("abscisse3",elements3Selectionnes,'elements3',maxH);
 
-     console.log(maxH);
+     
 
       $("#big-spectre").remove();
 }
@@ -321,10 +306,16 @@ function representeElements(abscisId,elts,classFormatBack,maxHour)
     });
 }
 
-function init(){
+function initialize(){
 
     representeElements("abscisseHours",hours,'hour',24);
-    representeElements("abscisse",elements,'elements',24);    
+    representeElements("abscisse",elements,'elements',24); 
+    representeElements("abscisse2",elements2,'elements2',24);
+    representeElements("abscisse3",elements3,'elements3',24);    
     elementsSelectionnes=[];
+    elements2Selectionnes=[];
+    elements3Selectionnes=[];
     heuresSelectionnes=[];
 }
+
+
