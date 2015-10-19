@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
 
-    hours= [{id:'hh_01',value:1},{id:'hh_02',value:2},{id:'hh_03',value:3},
+    hours= [{id:'hh_00',value:0},{id:'hh_01',value:1},{id:'hh_02',value:2},{id:'hh_03',value:3},
             {id:'hh_04',value:4},{id:'hh_05',value:5},{id:'hh_06',value:6},
             {id:'hh_07',value:7},{id:'hh_08',value:8},{id:'hh_09',value:9},
             {id:'hh_10',value:10},{id:'hh_11',value:11},{id:'hh_12',value:12},
@@ -14,7 +14,7 @@ $(document).ready(function(){
         {id:'elem3',value:4.3},{id:'elem4',value:9},{id:'elem5',value:11},{id:'elem6',value:15}];
 
     elements2=[{id:'elem21',value:1.2},{id:'elem22',value:1.7},
-        {id:'elem23',value:3.3},{id:'elem24',value:19},{id:'elem25',value:21},{id:'elem26',value:23}];
+        {id:'elem23',value:3.3},{id:'elem24',value:12.5},{id:'elem25',value:19},{id:'elem26',value:21},{id:'elem27',value:23}];
 
     elements3=[{id:'elem31',value:5.2},{id:'elem32',value:7.7},
         {id:'elem33',value:13.3},{id:'elem34',value:16},{id:'elem35',value:19.5},{id:'elem36',value:21.5}];
@@ -24,6 +24,10 @@ $(document).ready(function(){
     elementsSelectionnes=[];
     elements2Selectionnes=[];
     elements3Selectionnes=[];
+
+
+     firstElement = 0
+     lastElement = 24
     
 
    initialize();
@@ -240,7 +244,7 @@ function saveElement(elt,completList,selectedList){
             }
         });
 
-    console.log(selectedList);
+  //  console.log(selectedList);
 }
 
 
@@ -280,38 +284,149 @@ function zoomOnElementsSelected()
      if (heuresSelectionnes.length>0)
         maxH = heuresSelectionnes[heuresSelectionnes.length-1].value
 
-     representeElements("abscisseHours",heuresSelectionnes,'hour',maxH);
-     representeElements("abscisse",elementsSelectionnes,'elements',maxH);
-     representeElements("abscisse2",elements2Selectionnes,'elements2',maxH);
-     representeElements("abscisse3",elements3Selectionnes,'elements3',maxH);
+     representeHours("abscisseHours",heuresSelectionnes,'hour',maxH,true);
+     representeElements("abscisse",elementsSelectionnes,'elements',maxH,true);
+     representeElements("abscisse2",elements2Selectionnes,'elements2',maxH,true);
+     representeElements("abscisse3",elements3Selectionnes,'elements3',maxH,true);
 
      
 
       $("#big-spectre").remove();
 }
 
-function representeElements(abscisId,elts,classFormatBack,maxHour)
+function representeElements(abscisId,elts,classColor,maxHour,zoomOn)
 {
      widthTotal =$("#abscisseHours").width();  
+     
+        firstElement = heuresSelectionnes[0]
+        nbHours=heuresSelectionnes.length-1
 
-    elts.forEach(function(elt, index){
+   
 
-         $("#"+abscisId).append("<div id='"+elt.id+"' class='"+classFormatBack+"'>"+elt.value+" </div>");
-         left = Math.floor(widthTotal*elt.value/maxHour);
-         
-         $("#"+elt.id).css({
-                'left': left
-            });    
+     //console.log(firstElement)
+     //console.log(lastElement)
+    
+        if(!zoomOn)
+        {
+             elts.forEach(function(elt, index){
+                
+                 $("#"+abscisId).append("<div id='"+elt.id+"' class='"+classColor+"'>"+elt.value+" </div>");            
+                    
+                left = Math.floor(widthTotal*elt.value/maxHour)
 
-    });
+                 $("#"+elt.id).css({
+                        'left': left
+                    });    
+
+            });
+        }
+        
+        else
+        {
+             elts.forEach(function(elt, index){
+                
+                 $("#"+abscisId).append("<div id='"+elt.id+"' class='"+classColor+"'>"+elt.value+" </div>");
+
+                 decale=Math.floor(widthTotal*firstElement.value/maxHour)
+
+                 if(index==0)
+                 {
+                    left = Math.floor(widthTotal*elt.value/maxHour)-decale
+                 }
+                    
+                 else
+                 {  
+                    beforeH=getBeforeHour(elt)
+                    console.log(beforeH);
+                    left = $('#'+beforeH.id).position().left + Math.floor(widthTotal*(elt.value-beforeH.value)/nbHours)//-decale+Math.floor(decale*elt.value/lastElement.value)
+                   // console.log(Math.floor(decale*elt.value/lastElement.value));
+                  
+                 }
+
+
+                 $("#"+elt.id).css({
+                        'left': left
+                    });    
+
+            });
+        }
+}
+   
+function getBeforeHour(elt)
+{
+    var bhr=0;
+
+    for (var i = 0; i < heuresSelectionnes.length; i++) {
+       if (heuresSelectionnes[i].value>elt.value){
+            bhr=heuresSelectionnes[i-1];
+            break;
+       }
+    }
+    
+    return bhr
+}
+function representeHours(abscisId,elts,classColor,maxHour,zoomOn)
+{
+    widthTotal =$("#abscisseHours").width();  
+    firstElement = elts[0]
+    lastElement = elts[elts.length-1]
+    nbHours=elts.length-1
+
+     //console.log(firstElement)
+     //console.log(lastElement)
+    
+        if(!zoomOn)
+        {
+             elts.forEach(function(elt, index){
+                
+                 $("#"+abscisId).append("<div id='"+elt.id+"' class='"+classColor+"'>"+elt.value+" </div>");            
+                    
+                left = Math.floor(widthTotal*elt.value/maxHour)
+
+                 $("#"+elt.id).css({
+                        'left': left
+                    });    
+
+            });
+        }
+        
+        else
+        {
+             elts.forEach(function(elt, index){
+                
+                 $("#"+abscisId).append("<div id='"+elt.id+"' class='"+classColor+"'>"+elt.value+" </div>");
+
+                 decale=Math.floor(widthTotal*firstElement.value/maxHour)
+                 
+                 if(index==0)
+                 {
+                    left = Math.floor(widthTotal*elt.value/maxHour)-decale
+                    beforeVal = elt.value
+                 }
+                    
+                 else
+                 {  
+                    left = left + Math.floor(widthTotal*(elt.value-beforeVal)/nbHours)//-decale+Math.floor(decale*elt.value/lastElement.value)
+                   // console.log(Math.floor(decale*elt.value/lastElement.value));
+                   beforeVal = elt.value
+                   //console.log(left)
+                 }
+
+
+                 $("#"+elt.id).css({
+                        'left': left
+                    });    
+
+            });
+        }
 }
 
 function initialize(){
 
-    representeElements("abscisseHours",hours,'hour',24);
-    representeElements("abscisse",elements,'elements',24); 
-    representeElements("abscisse2",elements2,'elements2',24);
-    representeElements("abscisse3",elements3,'elements3',24);    
+    representeHours("abscisseHours",hours,'hour',24,false);
+    representeElements("abscisse",elements,'elements',24,false); 
+    representeElements("abscisse2",elements2,'elements2',24,false);
+    representeElements("abscisse3",elements3,'elements3',24,false);    
     elementsSelectionnes=[];
     elements2Selectionnes=[];
     elements3Selectionnes=[];
